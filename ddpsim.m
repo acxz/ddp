@@ -1,7 +1,7 @@
 function [x_hist, u_hist, traj_cost_hist, time_hist] = ...
- ddpsim(func_term_cost, func_run_cost, func_apply_ctrl, func_F, ...,
- func_state_est, learning_rate, init_state, init_ctrl_seq, time_horizon, ...
- plot_traj, print_verbose, print_short)
+ ddpsim(func_control_update_converged, func_term_cost, func_run_cost, ...
+ func_F, func_Fx, func_Fu, func_apply_ctrl, func_state_est, learning_rate, init_state, ...
+ init_ctrl_seq, time_horizon, plot_traj, print_verbose, print_short)
 
   % time stuff
   num_timesteps = size(init_ctrl_seq, 2);
@@ -16,7 +16,6 @@ function [x_hist, u_hist, traj_cost_hist, time_hist] = ...
 
   % control history
   control_dim = size(init_ctrl_seq, 1);
-  du = realmax('double') * ones(control_dim, num_timesteps);
   u_hist = [];
 
   % trajectory cost history
@@ -75,11 +74,13 @@ function [x_hist, u_hist, traj_cost_hist, time_hist] = ...
   end
 
   % Compute optimized u_traj
-  [u_traj_opt, traj_cost_opt] = ddp(u_traj);
+  [opt_u_trajs, opt_traj_costs] = ddp(func_control_update_converged, ...
+      func_term_cost, func_run_cost, func_F, func_Fx, func_Fu, learning_rate, ...
+      init_state, u_traj, time_horizon);
   
   % Choose the last optimized value of ddp
-  u_traj = u_traj_opt(:,:,end);
-  traj_cost = traj_cost_opt(end);
+  u_traj = opt_u_trajs(:,:,end);
+  traj_cost = opt_traj_costs(end);
     
   total_timestep_num = 1;
   while (total_timestep_num <= num_timesteps)

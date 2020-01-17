@@ -2,7 +2,7 @@
 
 # Zenmodo Badge: TODO
 
-A opitmal feedback controller implemented in Octave/Matlab.
+A optimal feedback controller implemented in Octave/Matlab.
 
 ## Dependencies
 - Octave or Matlab

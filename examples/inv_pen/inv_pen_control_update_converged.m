@@ -4,7 +4,7 @@
 function retval = inv_pen_control_update_converged(du, iteration)
 
     tol = 0.01;
-    max_iteration = 5;
+    max_iteration = 1;
     retval = false;
     if iteration > max_iteration
       retval = true;
