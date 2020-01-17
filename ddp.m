@@ -32,10 +32,10 @@ function [opt_u_trajs, opt_traj_costs] = ddp(func_control_update_converged, ...
   
     % Calculate dynamics and cost gradients/hessians
     dfxi = zeros(state_dim, state_dim, num_timesteps);
-    dfu = zeros(state_dim. control_dim, num_timesteps);
+    dfu = zeros(state_dim, control_dim, num_timesteps);
     for timestep_num = 1:num_timesteps
-      dfxi() = eye(state_dim, state_dim) + func_Fx(x_traj(:,timestep_num), opt_u_traj(:,timestep_num));
-      dfu() = func_Fu(x_traj(:,timestep_num), opt_u_traj(:,timestep_num));
+      dfxi(:,:,timestep_num) = eye(state_dim, state_dim) + func_Fx(x_traj(:,timestep_num), opt_u_traj(:,timestep_num));
+      dfu(:,:,timestep_num) = func_Fu(x_traj(:,timestep_num), opt_u_traj(:,timestep_num));
     end
     
     
